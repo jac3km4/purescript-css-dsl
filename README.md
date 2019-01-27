@@ -1,6 +1,4 @@
 # purescript-css-dsl
-Simple and fast CSS DSL
-
 The main goal of this library is to implement an efficient and type-safe DSL to render stylesheets.
 The intended usage is to expose your styles in a record and then access them from your `VDOM` (e.g. React) using typelevel strings that reference your stylesheet (names are checked to exist in the sheet).
 
