@@ -34,7 +34,7 @@ CSS.embed $ CSS.renderSheet Styles.sheet
 
 # notes
 
-The DSL in uses 'tagged' values, which are in fact just plain strings underneath, but it forces you to compose them in ways that produce valid CSS.
+The DSL uses 'tagged' values, which are in fact just plain strings underneath, but it forces you to compose them in ways that produce valid CSS.
 
 For instance, code ```purs [ display flex, flexDirection row ]``` produces a JavaScript array like: ```js [ "display:flex", "flex-direction":"row" ]```. An interesting consequence of this is that a good optimizing JavaScript compiler (e.g. Closure Compiler) can eliminate most of the DSL and convert your stylesheets to strings. 
 
