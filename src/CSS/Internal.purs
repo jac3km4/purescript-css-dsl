@@ -102,3 +102,7 @@ renderSelector = unsafeCoerce
 
 unsafeSelector :: String -> Selector
 unsafeSelector = unsafeCoerce
+
+border' :: String -> Dimension -> Border -> Color -> Rule
+border' name dim border color = unsafeRule name $
+  renderDimension dim <> " " <> renderBorder border <> " " <>  renderColor color

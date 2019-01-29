@@ -14,11 +14,10 @@ data Cls (sym :: Symbol) = Cls
 newtype Spec = Spec (Selector -> CSS) 
 
 instance semigroupSpec :: Semigroup Spec where
-  append (Spec fa) (Spec fb) = Spec \selector ->
-    fa selector <> fb selector
+  append (Spec fa) (Spec fb) = Spec $ fa <> fb
 
 instance monoidSpec :: Monoid Spec where
-  mempty = Spec $ const mempty
+  mempty = Spec mempty
 
 clazz :: String -> Selector
 clazz name = unsafeSelector $ "." <> name
@@ -29,12 +28,13 @@ child name = unsafeSelector $ " " <> name
 hover :: Selector
 hover = unsafeSelector ":hover"
 
-className :: ∀ r r' a l
-           . (IsSymbol l)
-          => Cons l a r' r
-          => Record r
-          -> Cls l
-          -> String
+className
+  :: ∀ r r' a l
+   . (IsSymbol l)
+  => Cons l a r' r
+  => Record r
+  -> Cls l
+  -> String
 className rec _ = reflectSymbol $ SProxy :: SProxy l
 
 data RenderCSS = RenderCSS
@@ -99,14 +99,20 @@ bottom = unsafeRule "bottom" <<< renderDimension
 fontSize :: Dimension -> Rule
 fontSize = unsafeRule "font-size" <<< renderDimension
 
-percent :: Int -> Dimension
+percent :: Number -> Dimension
 percent num = unsafeDimension $ show num <> "%"
 
 px :: Int -> Dimension
 px num = unsafeDimension $ show num <> "px"
 
-em :: Int -> Dimension
+em :: Number -> Dimension
 em num = unsafeDimension $ show num <> "em"
+
+zero :: Dimension
+zero = unsafeDimension "0"
+
+auto :: Dimension
+auto = unsafeDimension "auto"
 
 display :: Display -> Rule
 display = unsafeRule "display" <<< renderDisplay
@@ -186,3 +192,44 @@ padding a b c d = unsafeRule "padding" (intercalate " " (map renderDimension [a,
 margin :: Dimension -> Dimension -> Dimension -> Dimension -> Rule
 margin a b c d = unsafeRule "margin" (intercalate " " (map renderDimension [a, b, c, d]))
 
+solid :: Border
+solid = unsafeBorder "solid"
+
+border :: Dimension -> Border -> Color -> Rule
+border = border' "border"
+
+borderBottom :: Dimension -> Border -> Color -> Rule
+borderBottom = border' "border-bottom"
+
+borderTop :: Dimension -> Border -> Color -> Rule
+borderTop = border' "border-top"
+
+borderLeft :: Dimension -> Border -> Color -> Rule
+borderLeft = border' "border-left"
+
+borderRight :: Dimension -> Border -> Color -> Rule
+borderRight = border' "border-right"
+
+gray :: Color
+gray = rgb 128 128 128
+
+white :: Color
+white = rgb 255 255 255
+
+black :: Color
+black = rgb 0 0 0
+
+flexGrow :: Number -> Rule
+flexGrow value = unsafeRule "flex-grow" $ show value 
+
+evenChild :: Selector
+evenChild = unsafeSelector ":nth-child(even)"
+
+oddChild :: Selector
+oddChild = unsafeSelector ":nth-child(odd)"
+
+fontWeight :: Int -> Rule
+fontWeight value = unsafeRule "font-weight" $ show value
+
+maxHeight :: Dimension -> Rule
+maxHeight value = unsafeRule "max-height" $ renderDimension value
